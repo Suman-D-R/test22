@@ -2,6 +2,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import mqtt from 'mqtt';
 import ConnectPopup from './components/ConnectPopup';
+import Login from './components/Login';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
   const [walletInfo, setWalletInfo] = useState(null);
   const mqttRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({
     userId: '',
     operatorId: '',
@@ -327,6 +329,15 @@ export default function Home() {
   useEffect(() => {
     handleCashOut(betResponse?._id);
   }, [betResponse]);
+
+  const handleLogin = (userData) => {
+    setIsLoggedIn(true);
+    setUserData(userData);
+  };
+
+  if (!isLoggedIn) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen p-4'>
